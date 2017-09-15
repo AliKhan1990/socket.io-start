@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Talk</title>
+</head>
+<body>
+    <h1>WeChat</h1>
+    <input id="sendTxt" type="text">
+    <button id="sendBtn">发送消息</button>
+    <div name="wechat" id="wechatRoomm"></div>
+
+    <script>
+        var websocket = new WebSocket("ws://localhost:3003");
+        var chatsmsg = new String();
+        var showMessage = function (str) {
+            chatsmsg+=(str+"<br/>");
+            document.getElementById("wechatRoomm").innerHTML = chatsmsg;
+        };
+        websocket.onopen = function () {
+            console.log("ws open!");
+            document.getElementById('sendBtn').onclick = function () {
+                var txt = document.getElementById('sendTxt').value;
+                if(txt){
+                    websocket.send(txt);
+                }
+            }
+        };
+
+        websocket.onmessage = function (e) {
+            console.log(e.data);
+            showMessage(e.data);
+        };
+
+        websocket.onclose = function () {
+            console.log('ws close');
+        };
+    </script>
+</body>
+</html>
