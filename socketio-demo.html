@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./js/socket.io.js"></script>
+    <script>
+        var socket = io('ws://localhost:3003');
+        socket.on('news', function (data) {
+            console.log(data);
+            socket.emit('my other event', {my: 'data'});
+        });
+    </script>
+</head>
+<body>
+<h1>WeChat</h1>
+<input id="sendTxt" type="text">
+<button id="sendBtn">发送消息</button>
+<div name="wechat" id="wechatRoomm"></div>
+
+<script>
+    var socket = io("ws://localhost:3003");
+    var showMessage = function (str, type) {
+        var chatsmsg = new String();
+        var p = document.createElement('p');
+        p.innerHTML = str;
+        if (type == "enter") {
+            p.style.color = "cadetblue";
+        } else if (type == "leave") {
+            p.style.color = "indianred";
+        } else {
+            p.style.color = "grey";
+        }
+        chatsmsg = ("<p>" + str + "</p><br/>");
+        document.getElementById("wechatRoomm").appendChild(p);
+    };
+
+    document.getElementById('sendBtn').onclick = function () {
+        var txt = document.getElementById('sendTxt').value;
+        if (txt) {
+            socket.emit('message', txt);
+        }
+    };
+
+    socket.on('enter', function (data) {
+        showMessage(data, 'enter');
+    });
+
+    socket.on('message', function (data) {
+        showMessage(data, 'message');
+    });
+
+    socket.on('leave', function (data) {
+        showMessage(data, 'leave');
+    });
+
+</script>
+
+</body>
+</html>
