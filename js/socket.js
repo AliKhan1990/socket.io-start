@@ -22,7 +22,7 @@ var server = ws.createServer(function (conn) {
         console.log("Received "+str);
         var mes = {};
         mes.type = "message";
-        mes.data = str;
+        mes.data = conn.nickname + " say:" + str;
         broadcast(JSON.stringify(mes));
     });
     conn.on("close", function (code, reason) {
